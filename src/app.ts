@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 // Routes
+import authRouter from './routes/auth';
 import usersRouter from './routes/users';
 import postsRouter from './routes/posts';
 import commentsRouter from './routes/comments';
@@ -22,6 +23,7 @@ db.once('open', () => console.log('Connected to database'));
 
 // Routes
 app.use(express.json());
+app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/comments', commentsRouter);
