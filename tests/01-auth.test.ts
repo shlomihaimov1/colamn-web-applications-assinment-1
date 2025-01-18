@@ -205,3 +205,49 @@ describe("Auth Tests", () => {
     expect(response.statusCode).not.toBe(200);
   });
 });
+
+describe("Auth Middleware Tests", () => {
+  test("Test missing TOKEN_SECRET", async () => {
+    const originalTokenSecret = process.env.TOKEN_SECRET;
+    delete process.env.TOKEN_SECRET;
+
+    const response = await request(app).post("/posts")
+      .set({ 
+        "Authorization": "Bearer " + testUser.accessToken,
+        "x-refresh-token": testUser.refreshToken
+      })
+      .send({
+        title: "Test Post",
+        content: "Test Content"
+      });
+    expect(response.statusCode).toBe(500);
+
+    process.env.TOKEN_SECRET = originalTokenSecret;
+  });
+
+  test("Test invalid refresh token", async () => {
+    const response = await request(app).post("/posts")
+      .set({ 
+        "Authorization": "Bearer " + testUser.accessToken,
+        "x-refresh-token": "invalid_refresh_token"
+      })
+      .send({
+        title: "Test Post",
+        content: "Test Content"
+      });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test JWT verification failure", async () => {
+    const response = await request(app).post("/posts")
+      .set({ 
+        "Authorization": "Bearer invalid_token",
+        "x-refresh-token": testUser.refreshToken
+      })
+      .send({
+        title: "Test Post",
+        content: "Test Content"
+      });
+    expect(response.statusCode).toBe(401);
+  });
+});
