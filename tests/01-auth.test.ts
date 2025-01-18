@@ -204,6 +204,62 @@ describe("Auth Tests", () => {
       });
     expect(response.statusCode).not.toBe(200);
   });
+
+  test("Test refresh token with missing TOKEN_SECRET", async () => {
+    const originalTokenSecret = process.env.TOKEN_SECRET;
+    delete process.env.TOKEN_SECRET;
+
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: testUser.refreshToken,
+    });
+    expect(response.statusCode).toBe(400);
+
+    process.env.TOKEN_SECRET = originalTokenSecret;
+  });
+
+  test("Test refresh with invalid user ID in token", async () => {
+    // Create a token with non-existent user ID
+    const invalidToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NGY3ZjM5NDQ2ZjE2YjQ3ZjI5YzE2OTEiLCJyYW5kb20iOiIwLjQ3MzczNDc1Mjk3NTc4OTQiLCJpYXQiOjE2OTM5MzQxMzIsImV4cCI6MTY5MzkzNDczMn0.ZQxgpcwIxCQgxwGMhmbOt-YC_xkH3YBYJKiNYPQpQP0";
+    
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: invalidToken,
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test refresh with invalid token format", async () => {
+    const response = await request(app).post(baseUrl + "/refresh").send({
+      refreshToken: "invalid.token.format",
+    });
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test refresh with missing refresh token", async () => {
+    const response = await request(app).post(baseUrl + "/refresh").send({});
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test login with missing TOKEN_SECRET", async () => {
+    const originalTokenSecret = process.env.TOKEN_SECRET;
+    delete process.env.TOKEN_SECRET;
+
+    const response = await request(app).post(baseUrl + "/login").send(testUser);
+    expect(response.statusCode).toBe(500);
+
+    process.env.TOKEN_SECRET = originalTokenSecret;
+  });
+
+  test("Test logout with missing refresh token", async () => {
+    const response = await request(app).post(baseUrl + "/logout").send({});
+    expect(response.statusCode).toBe(400);
+  });
+
+  test("Test logout with invalid refresh token", async () => {
+    const response = await request(app).post(baseUrl + "/logout").send({
+      refreshToken: "invalid.token.format"
+    });
+    expect(response.statusCode).toBe(400);
+  });
 });
 
 describe("Auth Middleware Tests", () => {
