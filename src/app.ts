@@ -1,6 +1,7 @@
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import { specs, swaggerUi } from '../swaggerConfig';
 
 // Routes
 import authRouter from './routes/auth';
@@ -20,6 +21,9 @@ const db: mongoose.Connection = mongoose.connection;
 
 db.on('error', (error: Error) => console.error(error));
 db.once('open', () => console.log('Connected to database'));
+
+// Use swaggerUi and specs
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
 app.use(express.json());
