@@ -22,17 +22,21 @@ const db: mongoose.Connection = mongoose.connection;
 db.on('error', (error: Error) => console.error(error));
 db.once('open', () => console.log('Connected to database'));
 
+// Middleware
+app.use(express.json());
+
 // Use swaggerUi and specs
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
 
 // Routes
-app.use(express.json());
 app.use('/auth', authRouter);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 app.use('/comments', commentsRouter);
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server running on port ${port}`)
-});
+export const initApp = async (): Promise<Express> => {
+  await mongoose.connect(mongoUri);
+  return app;
+};
+
+export default app;

@@ -2,10 +2,14 @@
   "name": "assignments",
   "version": "1.0.0",
   "description": "Elad and Shlomi",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "dev": "npx tsx ./src/app.ts",
+    "dev": "npx tsx ./src/server.ts",
     "build": "tsc",
+    "test": "jest --detectOpenHandles --forceExit --runInBand --coverage",
+    "testAuth": "jest --detectOpenHandles --forceExit 01-auth.test.ts",
+    "testPost": "jest --detectOpenHandles --forceExit 02-posts.test.ts",
+    "testComment": "jest --detectOpenHandles --forceExit 03-comments.test.ts",
     "lint": "eslint . --ext .ts"
   },
   "dependencies": {
