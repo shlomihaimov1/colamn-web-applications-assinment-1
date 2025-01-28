@@ -237,4 +237,14 @@ describe("Comments Tests", () => {
     expect(response.statusCode).toBe(400); // Should trigger validation error
   });
 
+  test("Test get comments by user", async () => {
+    const response = await request(app).get("/comments/user/" + testUser._id)
+      .set({ 
+        "Authorization": "Bearer " + testUser.accessToken,
+        "x-refresh-token": testUser.refreshToken
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBeGreaterThan(0);
+  });
+
 });
