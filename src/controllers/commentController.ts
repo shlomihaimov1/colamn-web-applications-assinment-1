@@ -32,6 +32,16 @@ const getPostComments = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
+const getCommentsByUser = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req.params.userId;
+        const comments = await Comment.find({ userId });
+        res.json(comments);
+    } catch (err) {
+        res.status(500).json({ message: (err as Error).message });
+    }
+};
+
 const updateComment = async (req: Request, res: Response): Promise<void> => {
     try {
         const commentId = req.params.id;
@@ -83,5 +93,6 @@ export {
     createComment,
     getPostComments,
     updateComment,
-    deleteComment
+    deleteComment,
+    getCommentsByUser,
 };

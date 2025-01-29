@@ -47,6 +47,11 @@ GET http://localhost:3000/posts?sender=SENDER_ID
 Authorization: Bearer {{accessToken}}
 x-refresh-token: {{refreshToken}}
 
+### Get posts by user
+GET http://localhost:3000/posts?user=USER_ID
+Authorization: Bearer {{accessToken}}
+x-refresh-token: {{refreshToken}}
+
 ### Update a post
 PUT http://localhost:3000/posts/POST_ID
 Content-Type: application/json
@@ -71,6 +76,11 @@ x-refresh-token: {{refreshToken}}
 
 ### Get comments for a post
 GET http://localhost:3000/comments/POST_ID
+Authorization: Bearer {{accessToken}}
+x-refresh-token: {{refreshToken}}
+
+### Get comments by user
+GET http://localhost:3000/comments?user=USER_ID
 Authorization: Bearer {{accessToken}}
 x-refresh-token: {{refreshToken}}
 

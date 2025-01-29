@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { createComment, getPostComments, updateComment, deleteComment } from '../controllers/commentController';
+import { createComment, getPostComments, updateComment, deleteComment, getCommentsByUser } from '../controllers/commentController';
 import { authMiddleware } from "../middlewares/authMiddleware";
 
 const router: Router = express.Router();
@@ -125,5 +125,29 @@ router.put('/:id', authMiddleware, updateComment);
  *         description: Forbidden
  */
 router.delete("/:id", authMiddleware, deleteComment);
+
+/**
+ * @swagger
+ * /comments/user/{userId}:
+ *   get:
+ *     summary: Get comments by user
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *       - refreshTokenAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     responses:
+ *       200:
+ *         description: List of comments by the user
+ *       401:
+ *         description: Unauthorized
+ */
+router.get("/user/:userId", authMiddleware, getCommentsByUser);
 
 export default router;

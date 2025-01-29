@@ -245,4 +245,14 @@ describe("Posts Tests", () => {
       });
     expect(response2.statusCode).toBe(404);
   });
+
+  test("Test get posts by user", async () => {
+    const response = await request(app).get("/posts?user=" + testUser._id)
+      .set({ 
+        "Authorization": "Bearer " + testUser.accessToken,
+        "x-refresh-token": testUser.refreshToken
+      });
+    expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBeGreaterThan(0);
+  });
 });
